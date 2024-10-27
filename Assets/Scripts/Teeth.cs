@@ -4,9 +4,11 @@ public class Teeth : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private LayerMask _brushLayer;
+    [SerializeField] private GameObject _particles;
 
     [Header("Values")]
     [SerializeField] private FloatValue _cleaningTime;
+    [SerializeField] private float _particleZOffset;
 
     private Material _material;
     private ParticleSystem _bubbleParticles;
@@ -20,11 +22,12 @@ public class Teeth : MonoBehaviour
     private void Start()
     {
         TeethManager.Instance?.AddTeeth(this);
+        GameObject particles = Instantiate(_particles,transform.position, Quaternion.identity, transform);
+        particles.transform.localPosition = _particleZOffset * Vector3.forward;
 
         _material = GetComponent<Renderer>().material;
-        _bubbleParticles = GetComponentInChildren<ParticleSystem>();
-        ParticleSystem.ShapeModule particleShape = _bubbleParticles.shape;
-        particleShape.meshRenderer = GetComponent<MeshRenderer>();
+        _bubbleParticles = particles.GetComponent<ParticleSystem>();
+        
         _material.SetFloat("_Range", 0.0f);
     }
 
